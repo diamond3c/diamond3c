@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Diamond System – Billard 3 bandes</title>
+<meta name="description" content="Apprendre le Diamond System du billard français 3 bandes : départ, arrivée, visée et trajet.">
+<meta name="theme-color" content="#eef1f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#10151d" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Diamond 3C">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#eef1f5;--ink:#16202e;--card:#fff;--line:#d3d9e2;--red:#c8102e;--yel:#9a6b00;--org:#c25f00;--tr:rgba(200,16,46,.10);--ty:rgba(246,209,43,.32);--tw:#e3e8ef;--to:rgba(255,138,0,.16)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10151d;--ink:#e8edf4;--card:#171e29;--line:#2a3443;--red:#ff6b6b;--yel:#ffd23f;--org:#ff9d2e;--tr:rgba(255,107,107,.18);--ty:rgba(255,210,63,.18);--tw:rgba(255,255,255,.16);--to:rgba(255,157,46,.20)}}
+:root[data-theme="dark"]{--bg:#10151d;--ink:#e8edf4;--card:#171e29;--line:#2a3443;--red:#ff6b6b;--yel:#ffd23f;--org:#ff9d2e;--tr:rgba(255,107,107,.18);--ty:rgba(255,210,63,.18);--tw:rgba(255,255,255,.16);--to:rgba(255,157,46,.20)}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.3;overscroll-behavior:none}
+main{max-width:520px;margin:0 auto;height:100vh;height:100dvh;display:flex;flex-direction:column;gap:10px;padding:max(10px,env(safe-area-inset-top)) 12px max(10px,env(safe-area-inset-bottom))}
+.board{flex:1;min-height:0;position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px}
+svg{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.arr text{fill:var(--red);font:700 6.6px "Bricolage Grotesque",system-ui,sans-serif;text-anchor:middle;dominant-baseline:central}
+.arr path{fill:none;stroke:var(--red);stroke-width:.6}
+.arr line{stroke:var(--red);stroke-width:.6}
+.vl{fill:#fff;stroke:#0b2a63;stroke-width:1.1px;paint-order:stroke;stroke-linejoin:round;font:700 6.6px "Bricolage Grotesque",system-ui,sans-serif}
+.dp{fill:#ffd23f;stroke:#0b2a63;stroke-width:1.1px;paint-order:stroke;stroke-linejoin:round;font:700 6.6px "Bricolage Grotesque",system-ui,sans-serif}
+.btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.btn{font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-height:68px;padding:6px 3px;border-radius:12px;border:2px solid var(--c);background:var(--tint);color:var(--c);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;line-height:1.15}
+.btn span{font-size:.74rem;font-weight:600;text-align:center}
+.btn b{font-size:1.4rem;line-height:1.1}
+.btn small{font-size:.62rem;font-weight:600;text-align:center}
+.btn[aria-pressed="true"]{background:var(--fill);color:var(--on)}
+.btn:focus-visible{outline:3px solid #1f5fbf;outline-offset:2px}
+.btn.r{--c:var(--red);--tint:var(--tr);--fill:#c8102e;--on:#fff}
+.btn.y{--c:var(--yel);--tint:var(--ty);--fill:#f6d12b;--on:#3a2c00}
+.btn.w{--c:#7d8899;--tint:var(--tw);--fill:#fff;--on:#16202e;color:var(--ink)}
+.btn.w[aria-pressed="true"]{background:#fff;color:#16202e;border-color:#16202e}
+.btn.o{--c:var(--org);--tint:var(--to);--fill:#ff8a00;--on:#2b1600}
+</style>
+</head>
+<body>
+<main>
+<div class="board">
+<svg id="table" viewBox="-202 -18 202 348" role="img" aria-label="Billard français vu de dessus, posé dans le sens de la hauteur : tapis bleu, bandes en bois, diamants, billes rouge et jaune">
+<defs>
+<linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a4a2b"/><stop offset="1" stop-color="#5a3219"/></linearGradient>
+<radialGradient id="cloth" cx=".5" cy=".5" r=".75"><stop offset="0" stop-color="#2b6fd1"/><stop offset="1" stop-color="#1b52a8"/></radialGradient>
+</defs>
+<g id="world" transform="rotate(90)">
+<g transform="translate(0,16)">
+<rect x="0" y="0" width="312" height="170" rx="9" fill="url(#wood)"/>
+<rect x="14" y="14" width="284" height="142" fill="url(#cloth)"/>
+<rect x="14" y="14" width="284" height="142" fill="none" stroke="#0f3b82" stroke-width="2"/>
+<g id="grid" stroke="#ffffff" stroke-opacity=".35" stroke-width=".5" stroke-dasharray="2 2"></g>
+<g id="diamonds" fill="#f4efe2" stroke="#c9c0a8" stroke-width=".3"></g>
+</g>
+<g id="grid2" stroke="#ff6b6b" stroke-opacity=".9" stroke-width=".7" style="display:none"></g>
+<g class="arr" id="arr" style="display:none"></g>
+<g id="dep" style="display:none"></g>
+<g id="vis" style="display:none"></g>
+<g id="trajet" style="display:none"></g>
+</g>
+</svg>
+</div>
+
+<nav class="btns" aria-label="Affichages">
+<button type="button" class="btn r" id="b2" aria-pressed="false"><span>Voir Arrivée</span><b id="v">–</b></button>
+<button type="button" class="btn y" id="b3" aria-pressed="false"><span>Voir Départ</span><b id="vy">–</b></button>
+<button type="button" class="btn w" id="b4" aria-pressed="false"><span>Voir Visée</span><b id="vw">–</b><small id="nw"></small></button>
+<button type="button" class="btn o" id="b5" aria-pressed="false"><span>Voir Trajet</span></button>
+</nav>
+</main>
+<script>
+(function(){
+var NS="http://www.w3.org/2000/svg",S=35.5,X0=14,X1=298,Y0=30,Y1=172,BR=3.075;
+var svg=document.getElementById("table"),world=document.getElementById("world"),dg=document.getElementById("diamonds"),g=document.getElementById("grid"),g3=document.getElementById("grid2"),a=document.getElementById("arr"),dpG=document.getElementById("dep"),visG=document.getElementById("vis"),trG=document.getElementById("trajet"),lastAraw=null,wpos=null;
+function mk(n,at){var e=document.createElementNS(NS,n);for(var k in at)e.setAttribute(k,at[k]);return e}
+function dia(x,y){dg.appendChild(mk("polygon",{points:x+","+(y-2.6)+" "+(x+1.7)+","+y+" "+x+","+(y+2.6)+" "+(x-1.7)+","+y}))}
+for(var i=0;i<=8;i++){var x=X0+S*i;dia(x,7);dia(x,163);g.appendChild(mk("line",{x1:x,y1:14,x2:x,y2:156}))}
+for(var j=0;j<=4;j++){var y=14+S*j;dia(7,y);dia(305,y);g.appendChild(mk("line",{x1:14,y1:y,x2:298,y2:y}))}
+var A=[[0,0],[10,1],[20,2],[30,3],[35,3.5],[40,4],[50,4.5],[60,5],[70,5.5],[80,6]];
+var SH={30:.86,35:1.14,40:1.5,50:2,60:2.5,70:2.86,80:3};
+var L=A.map(function(v){var u=v[0];return{v:u,T:[X0+S*v[1],Y0],E:u<=20?[X0+S*(6+u/10),Y1]:[X1,Y1-S*SH[u]]}});
+var lastA=null,lastD=null,lastV=null,vtop=null,vh=null,flip=null,flipH=null,dflip=null,dflipH=null,ball={x:200,y:135};
+function fy(y){return flip?Y0+Y1-y:y}
+function fx(x){return flipH?X0+X1-x:x}
+function label(x,side,v){var top=side==="top";
+a.appendChild(mk("line",{x1:x,x2:x,y1:top?11:186,y2:top?16:191}));
+var yy=top?6:196,t=mk("text",{x:x,y:yy,transform:"rotate(-90 "+x+" "+yy+")"});t.textContent=v;a.appendChild(t)}
+function draw(){a.textContent="";g3.textContent="";var sh=[];
+L.forEach(function(o){
+label(fx(o.T[0]),flip?"bottom":"top",o.v);
+if(o.v<=20)label(fx(o.E[0]),flip?"top":"bottom",o.v);else sh.push({v:o.v,y:fy(o.E[1])});
+g3.appendChild(mk("line",{x1:fx(o.T[0]),y1:fy(o.T[1]),x2:fx(o.E[0]),y2:fy(o.E[1])}))});
+sh.sort(function(p,q){return p.y-q.y});var ly=sh.map(function(o){return o.y});
+for(var k=0;k<3;k++)for(var i=1;i<ly.length;i++){var gap=ly[i]-ly[i-1];if(gap<10.5){var d=(10.5-gap)/2;ly[i-1]-=d;ly[i]+=d}}
+sh.forEach(function(o,i){var sg=flipH?-1:1,x0=flipH?0:312;a.appendChild(mk("path",{d:"M"+x0+","+o.y+" L"+(x0+4*sg)+","+o.y+" L"+(x0+7*sg)+","+ly[i]}));
+var tx=x0+11.5*sg,t=mk("text",{x:tx,y:ly[i],transform:"rotate(-90 "+tx+" "+ly[i]+")"});t.textContent=o.v;a.appendChild(t)});
+}
+function drawDep(){dpG.textContent="";
+var yl=dflip?Y0+6:Y1-6,dx=function(x){return dflipH?X0+X1-x:x},dy=function(y){return dflip?Y0+Y1-y:y};
+[[2,20],[3,25],[4,30],[5,35],[6,40],[7,45]].forEach(function(v){dt(dx(X0+S*v[0]),yl,v[1],"middle")});
+[[0,50],[1,60],[2,70],[2.5,80],[3,90]].forEach(function(v){var y=dy(Y1-S*v[0]);if(!v[0])y+=dflip?6:-6;dt(dflipH?X0+5.5:X1-5.5,y,v[1],"middle")})}
+function dt(x,y,txt,anc){var t=mk("text",{x:x,y:y,"text-anchor":"middle","dominant-baseline":"central","class":"dp",transform:"rotate(-90 "+x+" "+y+")"});t.textContent=txt;dpG.appendChild(t)}
+function val(P){var c=L.map(function(o){var dx=o.E[0]-o.T[0],dy=o.E[1]-o.T[1];return(dx*(P[1]-o.T[1])-dy*(P[0]-o.T[0]))/Math.hypot(dx,dy)});
+if(c[0]>0)return"< 0";if(c[c.length-1]<0)return"> 80";
+for(var i=0;i<c.length-1;i++)if(c[i]<=0&&c[i+1]>=0){var p=-c[i],q=c[i+1];return(L[i].v+(L[i+1].v-L[i].v)*(p+q?p/(p+q):0))}}
+var bg=mk("g",{style:"cursor:grab"});
+bg.appendChild(mk("circle",{r:10,fill:"transparent"}));
+bg.appendChild(mk("circle",{r:BR,fill:"#e0262d",stroke:"#7d0f14","stroke-width":.6}));
+bg.appendChild(mk("circle",{r:.9,cx:-1,cy:-1,fill:"#fff","fill-opacity":.7}));
+var vEl=document.getElementById("v");
+function nearCorner(b){return[[X0,Y0],[X1,Y0],[X0,Y1],[X1,Y1]].some(function(c){return Math.hypot(b.x-c[0],b.y-c[1])<=12})}
+function update(){var f=ball.y<(Y0+Y1)/2,yy=f?Y0+Y1-ball.y:ball.y,r=val([ball.x,yy]),h=false;
+if(typeof r!=="number"){var r2=val([X0+X1-ball.x,yy]);if(typeof r2==="number"){h=true;r=r2}}
+if(f!==flip||h!==flipH){flip=f;flipH=h;draw()}
+place2();
+if(nearCorner(ball))r=22;
+bg.setAttribute("transform","translate("+ball.x+","+ball.y+")");
+lastAraw=(typeof r==="number"&&!nearCorner(ball))?r:null;lastA=typeof r==="number"?Math.round(r):null;vEl.textContent=typeof r==="number"?Math.round(r):r;
+refreshNote()}
+function pt(e){var p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(world.getScreenCTM().inverse())}
+function setBall(e){var p=pt(e);cur.x=Math.min(X1-BR,Math.max(X0+BR,p.x));cur.y=Math.min(Y1-BR,Math.max(Y0+BR,p.y));if(cur===ball)update();else place2()}
+var drag=false,cur=ball;
+svg.addEventListener("pointerdown",function(e){var p=pt(e);if(p.x>=X0&&p.x<=X1&&p.y>=Y0&&p.y<=Y1){cur=Math.hypot(p.x-ball.x,p.y-ball.y)<=Math.hypot(p.x-ball2.x,p.y-ball2.y)?ball:ball2;drag=true;try{svg.setPointerCapture(e.pointerId)}catch(_){}setBall(e)}});
+svg.addEventListener("pointermove",function(e){if(drag)setBall(e)});
+["pointerup","pointercancel"].forEach(function(n){svg.addEventListener(n,function(){drag=false})});
+var ball2={x:120,y:158},yb=mk("g",{style:"cursor:grab"});
+yb.appendChild(mk("circle",{r:10,fill:"transparent"}));
+yb.appendChild(mk("circle",{r:BR,fill:"#f6d12b",stroke:"#8a6d00","stroke-width":.6}));
+yb.appendChild(mk("circle",{r:.9,cx:-1,cy:-1,fill:"#fff","fill-opacity":.8}));
+function refreshNote(){var e=document.getElementById("nw"),w=document.getElementById("vw");
+vtop=!dflip;vh=!!dflipH;
+if(lastA===null||lastD===null){lastV=null;w.textContent="–";e.textContent=""}
+else{var D=Math.round(lastD),A=Math.round(lastA);lastV=D-A;w.textContent=lastV;e.textContent=D+" − "+A+(lastV<0?" · non applicable":"")}
+drawVis();drawTrajet()}
+function vt(x,y,txt){var t=mk("text",{x:x,y:y,"text-anchor":"middle","dominant-baseline":"central","class":"vl",transform:"rotate(-90 "+x+" "+y+")"});t.textContent=txt;visG.appendChild(t)}
+function drawVis(){visG.textContent="";wpos=null;var yl=vtop?Y0+6:Y1-6;
+[[0,0],[10,1],[20,2],[30,3],[40,4],[50,5],[60,5.5],[70,6],[80,6.5],[90,7]].forEach(function(v){
+var x=vh?X1-S*v[1]:X0+S*v[1];if(v[1]===0)x+=vh?-5:5;vt(x,yl,v[0])});
+if(lastV!==null&&lastV>=0&&lastV<=90){var m=lastV<=50?lastV/10:5+(lastV-50)/20;
+var cx=vh?X1-S*m:X0+S*m,cy=vtop?Y0+BR:Y1-BR;
+wpos=[cx,cy];visG.appendChild(mk("circle",{cx:cx,cy:cy,r:BR,fill:"#f7f7f2",stroke:"#8c8c8c","stroke-width":.6}));
+visG.appendChild(mk("circle",{cx:cx-1,cy:cy-1,r:.9,fill:"#fff"}))}}
+function tOf(v){for(var i=0;i<A.length-1;i++)if(v>=A[i][0]&&v<=A[i+1][0])return A[i][1]+(A[i+1][1]-A[i][1])*(v-A[i][0])/(A[i+1][0]-A[i][0]);return null}
+function tl(x1,y1,x2,y2,dot){trG.appendChild(mk("line",{x1:x1,y1:y1,x2:x2,y2:y2,stroke:"#ff8a00","stroke-width":1.1,"stroke-linecap":"round"}));
+if(dot!==false)trG.appendChild(mk("circle",{cx:x2,cy:y2,r:1.6,fill:"#ff8a00",stroke:"#0b2a63","stroke-width":.4}))}
+function drawTrajet(){trG.textContent="";var R=null,m=lastAraw!==null?tOf(lastAraw):null;
+if(m!==null){R=[fx(X0+S*m),fy(Y0)];tl(ball.x,ball.y,R[0],R[1])}
+if(wpos)tl(ball2.x,ball2.y,wpos[0],wpos[1]);
+if(R&&wpos){var xs=flipH?X1:X0,rx=2*xs-R[0],den=rx-wpos[0];
+if(Math.abs(den)>1e-6){var t=(xs-wpos[0])/den;
+if(t>0&&t<1){var qy=wpos[1]+t*(R[1]-wpos[1]);tl(wpos[0],wpos[1],xs,qy);tl(xs,qy,R[0],R[1],false)}}}}
+function depVal(b){var x=((dflipH?X0+X1-b.x:b.x)-X0)/S,y=(dflip?b.y-Y0:Y1-b.y)/S,h=x+y;
+if(h<=8)return h<2?"< 20":10+5*h;
+var u=h-8;return u>3?"> 90":u<=2?50+10*u:u<=2.5?70+20*(u-2):80+20*(u-2.5)}
+function place2(){var fr={f:!flip,h:flipH};if(fr.f!==dflip||fr.h!==dflipH){dflip=fr.f;dflipH=fr.h;drawDep()}yb.setAttribute("transform","translate("+ball2.x+","+ball2.y+")");
+var dv=nearCorner(ball2)?52:depVal(ball2);lastD=typeof dv==="number"?Math.round(dv):null;document.getElementById("vy").textContent=typeof dv==="number"?Math.round(dv):dv;refreshNote()}
+world.appendChild(bg);world.appendChild(yb);update();place2();
+function bind(id,fn){var b=document.getElementById(id);b.addEventListener("click",function(){var on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on?"true":"false");fn(on)})}
+bind("b2",function(on){var d=on?"block":"none";g3.style.display=d;a.style.display=d});
+bind("b3",function(on){dpG.style.display=on?"block":"none"});
+bind("b4",function(on){visG.style.display=on?"block":"none"});
+bind("b5",function(on){trG.style.display=on?"block":"none"});
+})();
+</script>
+<script>
+if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){
+window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})});
+}
+</script>
+</body>
+</html>
