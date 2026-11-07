@@ -12,8 +12,8 @@
 <meta name="apple-mobile-web-app-title" content="Diamond 3C">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700&display=swap">
 <style>
 :root{--bg:#eef1f5;--ink:#16202e;--card:#fff;--line:#d3d9e2;--red:#c8102e;--yel:#9a6b00;--org:#c25f00;--tr:rgba(200,16,46,.10);--ty:rgba(246,209,43,.32);--tw:#e3e8ef;--to:rgba(255,138,0,.16)}
@@ -42,6 +42,9 @@ svg{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:
 .btn.w{--c:#7d8899;--tint:var(--tw);--fill:#fff;--on:#16202e;color:var(--ink)}
 .btn.w[aria-pressed="true"]{background:#fff;color:#16202e;border-color:#16202e}
 .btn.o{--c:var(--org);--tint:var(--to);--fill:#ff8a00;--on:#2b1600}
+.btn,.btn.w{background:#000;border-color:var(--k);color:var(--k)}
+.btn[aria-pressed="true"],.btn.w[aria-pressed="true"]{background:var(--k);color:#000;border-color:var(--k)}
+.btn.r{--k:#ff4d5e}.btn.y{--k:#f6d12b}.btn.w{--k:#fff}.btn.o{--k:#ff8a00}
 </style>
 </head>
 <body>
@@ -61,19 +64,19 @@ svg{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:
 <g id="diamonds" fill="#f4efe2" stroke="#c9c0a8" stroke-width=".3"></g>
 </g>
 <g id="grid2" stroke="#ff6b6b" stroke-opacity=".9" stroke-width=".7" style="display:none"></g>
-<g class="arr" id="arr" style="display:none"></g>
-<g id="dep" style="display:none"></g>
-<g id="vis" style="display:none"></g>
+<g class="arr" id="arr"></g>
+<g id="dep"></g>
+<g id="vis"></g>
 <g id="trajet" style="display:none"></g>
 </g>
 </svg>
 </div>
 
 <nav class="btns" aria-label="Affichages">
-<button type="button" class="btn r" id="b2" aria-pressed="false"><span>Voir Arrivée</span><b id="v">–</b></button>
-<button type="button" class="btn y" id="b3" aria-pressed="false"><span>Voir Départ</span><b id="vy">–</b></button>
-<button type="button" class="btn w" id="b4" aria-pressed="false"><span>Voir Visée</span><b id="vw">–</b><small id="nw"></small></button>
-<button type="button" class="btn o" id="b5" aria-pressed="false"><span>Voir Trajet</span></button>
+<button type="button" class="btn r" id="b2" aria-pressed="false"><span>Arrivée</span><b id="v">–</b></button>
+<button type="button" class="btn y" id="b3" aria-pressed="false"><span>Départ</span><b id="vy">–</b></button>
+<button type="button" class="btn w" id="b4" aria-pressed="false"><span>Visée</span><b id="vw">–</b><small id="nw"></small></button>
+<button type="button" class="btn o" id="b5" aria-pressed="false"><span>Trajet</span></button>
 </nav>
 </main>
 <script>
@@ -82,12 +85,12 @@ var NS="http://www.w3.org/2000/svg",S=35.5,X0=14,X1=298,Y0=30,Y1=172,BR=3.075;
 var svg=document.getElementById("table"),world=document.getElementById("world"),dg=document.getElementById("diamonds"),g=document.getElementById("grid"),g3=document.getElementById("grid2"),a=document.getElementById("arr"),dpG=document.getElementById("dep"),visG=document.getElementById("vis"),trG=document.getElementById("trajet"),lastAraw=null,wpos=null;
 function mk(n,at){var e=document.createElementNS(NS,n);for(var k in at)e.setAttribute(k,at[k]);return e}
 function dia(x,y){dg.appendChild(mk("polygon",{points:x+","+(y-2.6)+" "+(x+1.7)+","+y+" "+x+","+(y+2.6)+" "+(x-1.7)+","+y}))}
-for(var i=0;i<=8;i++){var x=X0+S*i;dia(x,7);dia(x,163);g.appendChild(mk("line",{x1:x,y1:14,x2:x,y2:156}))}
-for(var j=0;j<=4;j++){var y=14+S*j;dia(7,y);dia(305,y);g.appendChild(mk("line",{x1:14,y1:y,x2:298,y2:y}))}
+for(var i=0;i<=8;i++){var x=X0+S*i;if(i>0&&i<8){dia(x,7);dia(x,163)}g.appendChild(mk("line",{x1:x,y1:14,x2:x,y2:156}))}
+for(var j=0;j<=4;j++){var y=14+S*j;if(j>0&&j<4){dia(7,y);dia(305,y)}g.appendChild(mk("line",{x1:14,y1:y,x2:298,y2:y}))}
 var A=[[0,0],[10,1],[20,2],[30,3],[35,3.5],[40,4],[50,4.5],[60,5],[70,5.5],[80,6]];
 var SH={30:.86,35:1.14,40:1.5,50:2,60:2.5,70:2.86,80:3};
 var L=A.map(function(v){var u=v[0];return{v:u,T:[X0+S*v[1],Y0],E:u<=20?[X0+S*(6+u/10),Y1]:[X1,Y1-S*SH[u]]}});
-var lastA=null,lastD=null,lastV=null,vtop=null,vh=null,flip=null,flipH=null,dflip=null,dflipH=null,ball={x:200,y:135};
+var lastA=null,lastD=null,lastV=null,vtop=null,vh=null,flip=null,flipH=null,dflip=null,dflipH=null,ball={x:277.8,y:52.7};
 function fy(y){return flip?Y0+Y1-y:y}
 function fx(x){return flipH?X0+X1-x:x}
 function label(x,side,v){var top=side==="top";
@@ -103,8 +106,16 @@ for(var k=0;k<3;k++)for(var i=1;i<ly.length;i++){var gap=ly[i]-ly[i-1];if(gap<10
 sh.forEach(function(o,i){var sg=flipH?-1:1,x0=flipH?0:312;a.appendChild(mk("path",{d:"M"+x0+","+o.y+" L"+(x0+4*sg)+","+o.y+" L"+(x0+7*sg)+","+ly[i]}));
 var tx=x0+11.5*sg,t=mk("text",{x:tx,y:ly[i],transform:"rotate(-90 "+tx+" "+ly[i]+")"});t.textContent=o.v;a.appendChild(t)});
 }
-function drawDep(){dpG.textContent="";
+var dlG=mk("g",{style:"display:none"}),crG=mk("g",{style:"display:none"});
+function drawDL(){dlG.textContent="";var dxf=function(x){return dflipH?X0+X1-x:x},dyf=function(y){return dflip?Y0+Y1-y:y};
+var x=((dflipH?X0+X1-dpo().x:dpo().x)-X0)/S,y=(dflip?dpo().y-Y0:Y1-dpo().y)/S,h=x+y;if(h<2||h>11)return;
+var a=h<=8?[h,0]:[8,h-8],b=[x,y];
+var P=function(q){return[dxf(X0+S*q[0]),dyf(Y1-S*q[1])]},p=P(a),q=P(b);
+dlG.appendChild(mk("line",{x1:p[0],y1:p[1],x2:q[0],y2:q[1],stroke:"#f6d12b","stroke-width":.9,"stroke-opacity":.9,"stroke-linecap":"round"}))}
+function drawDep(){dpG.textContent="";dpG.appendChild(dlG);
 var yl=dflip?Y0+6:Y1-6,dx=function(x){return dflipH?X0+X1-x:x},dy=function(y){return dflip?Y0+Y1-y:y};
+var P=function(x,y){return[dx(X0+S*x),dy(Y1-S*y)]},ln=function(a,b){var p=P(a[0],a[1]),q=P(b[0],b[1]);dpG.appendChild(mk("line",{x1:p[0],y1:p[1],x2:q[0],y2:q[1],stroke:"#f6d12b","stroke-width":.8,"stroke-opacity":.85,"stroke-linecap":"round"}))};
+
 [[2,20],[3,25],[4,30],[5,35],[6,40],[7,45]].forEach(function(v){dt(dx(X0+S*v[0]),yl,v[1],"middle")});
 [[0,50],[1,60],[2,70],[2.5,80],[3,90]].forEach(function(v){var y=dy(Y1-S*v[0]);if(!v[0])y+=dflip?6:-6;dt(dflipH?X0+5.5:X1-5.5,y,v[1],"middle")})}
 function dt(x,y,txt,anc){var t=mk("text",{x:x,y:y,"text-anchor":"middle","dominant-baseline":"central","class":"dp",transform:"rotate(-90 "+x+" "+y+")"});t.textContent=txt;dpG.appendChild(t)}
@@ -117,21 +128,24 @@ bg.appendChild(mk("circle",{r:BR,fill:"#e0262d",stroke:"#7d0f14","stroke-width":
 bg.appendChild(mk("circle",{r:.9,cx:-1,cy:-1,fill:"#fff","fill-opacity":.7}));
 var vEl=document.getElementById("v");
 function nearCorner(b){return[[X0,Y0],[X1,Y0],[X0,Y1],[X1,Y1]].some(function(c){return Math.hypot(b.x-c[0],b.y-c[1])<=12})}
-function update(){var f=ball.y<(Y0+Y1)/2,yy=f?Y0+Y1-ball.y:ball.y,r=val([ball.x,yy]),h=false;
-if(typeof r!=="number"){var r2=val([X0+X1-ball.x,yy]);if(typeof r2==="number"){h=true;r=r2}}
+var close=false;
+function ap(){return close?{x:(ball.x+ball2.x)/2,y:(ball.y+ball2.y)/2}:ball}
+function dpo(){return close?ball3:ball2}
+function update(){close=Math.hypot(ball.x-ball2.x,ball.y-ball2.y)<=4*BR;var A=ap(),f=true,h=false,r=null;var pick=null,pickA=null,Dq=dpo();[[true,false],[true,true],[false,false],[false,true]].sort(function(a,b){var d=function(c){return Math.hypot(Dq.x-(c[1]?X0:X1),Dq.y-(!c[0]?Y0:Y1))};return d(a)-d(b)}).forEach(function(c){var q=nearCorner(A)?22:val([c[1]?X0+X1-A.x:A.x,c[0]?Y0+Y1-A.y:A.y]);if(typeof q!=="number")return;var dd=nearCorner(Dq)?52:depVal(Dq,!c[0],c[1]);if(!pickA)pickA={c:c,q:q};if(!pick&&typeof dd==="number")pick={c:c,q:q}});var sel=pick||pickA||{c:[true,false],q:val([A.x,Y0+Y1-A.y])};f=sel.c[0];h=sel.c[1];r=sel.q;
 if(f!==flip||h!==flipH){flip=f;flipH=h;draw()}
 place2();
-if(nearCorner(ball))r=22;
+if(nearCorner(A))r=22;
 bg.setAttribute("transform","translate("+ball.x+","+ball.y+")");
-lastAraw=(typeof r==="number"&&!nearCorner(ball))?r:null;lastA=typeof r==="number"?Math.round(r):null;vEl.textContent=typeof r==="number"?Math.round(r):r;
+lastAraw=(typeof r==="number"&&!nearCorner(A))?r:null;lastA=typeof r==="number"?Math.round(r):null;vEl.textContent=typeof r==="number"?Math.round(r):r;
 refreshNote()}
 function pt(e){var p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(world.getScreenCTM().inverse())}
-function setBall(e){var p=pt(e);cur.x=Math.min(X1-BR,Math.max(X0+BR,p.x));cur.y=Math.min(Y1-BR,Math.max(Y0+BR,p.y));if(cur===ball)update();else place2()}
+function setBall(e){var p=pt(e);cur.x=Math.min(X1-BR,Math.max(X0+BR,p.x));cur.y=Math.min(Y1-BR,Math.max(Y0+BR,p.y));if(cur===ball3)wb.setAttribute("transform","translate("+ball3.x+","+ball3.y+")");update()}
 var drag=false,cur=ball;
-svg.addEventListener("pointerdown",function(e){var p=pt(e);if(p.x>=X0&&p.x<=X1&&p.y>=Y0&&p.y<=Y1){cur=Math.hypot(p.x-ball.x,p.y-ball.y)<=Math.hypot(p.x-ball2.x,p.y-ball2.y)?ball:ball2;drag=true;try{svg.setPointerCapture(e.pointerId)}catch(_){}setBall(e)}});
+svg.addEventListener("pointerdown",function(e){var p=pt(e);if(p.x>=X0&&p.x<=X1&&p.y>=Y0&&p.y<=Y1){var d1=Math.hypot(p.x-ball.x,p.y-ball.y),d2=Math.hypot(p.x-ball2.x,p.y-ball2.y),d3=Math.hypot(p.x-ball3.x,p.y-ball3.y);cur=d1<=d2&&d1<=d3?ball:(d2<=d3?ball2:ball3);drag=true;try{svg.setPointerCapture(e.pointerId)}catch(_){}setBall(e)}});
 svg.addEventListener("pointermove",function(e){if(drag)setBall(e)});
 ["pointerup","pointercancel"].forEach(function(n){svg.addEventListener(n,function(){drag=false})});
-var ball2={x:120,y:158},yb=mk("g",{style:"cursor:grab"});
+var ball2={x:87.4,y:71.3},yb=mk("g",{style:"cursor:grab"}),ball3={x:190,y:71.3},wb=mk("g",{style:"cursor:grab"});
+wb.appendChild(mk("circle",{r:10,fill:"transparent"}));wb.appendChild(mk("circle",{r:BR,fill:"#f7f7f2",stroke:"#8c8c8c","stroke-width":.6}));wb.appendChild(mk("circle",{r:.9,cx:-1,cy:-1,fill:"#fff"}));wb.setAttribute("transform","translate("+ball3.x+","+ball3.y+")");
 yb.appendChild(mk("circle",{r:10,fill:"transparent"}));
 yb.appendChild(mk("circle",{r:BR,fill:"#f6d12b",stroke:"#8a6d00","stroke-width":.6}));
 yb.appendChild(mk("circle",{r:.9,cx:-1,cy:-1,fill:"#fff","fill-opacity":.8}));
@@ -145,28 +159,27 @@ function drawVis(){visG.textContent="";wpos=null;var yl=vtop?Y0+6:Y1-6;
 [[0,0],[10,1],[20,2],[30,3],[40,4],[50,5],[60,5.5],[70,6],[80,6.5],[90,7]].forEach(function(v){
 var x=vh?X1-S*v[1]:X0+S*v[1];if(v[1]===0)x+=vh?-5:5;vt(x,yl,v[0])});
 if(lastV!==null&&lastV>=0&&lastV<=90){var m=lastV<=50?lastV/10:5+(lastV-50)/20;
-var cx=vh?X1-S*m:X0+S*m,cy=vtop?Y0+BR:Y1-BR;
-wpos=[cx,cy];visG.appendChild(mk("circle",{cx:cx,cy:cy,r:BR,fill:"#f7f7f2",stroke:"#8c8c8c","stroke-width":.6}));
-visG.appendChild(mk("circle",{cx:cx-1,cy:cy-1,r:.9,fill:"#fff"}))}}
+var cx=vh?X1-S*m:X0+S*m,thr=lastD>=50,cy=vtop?(thr?Y0:Y0+BR):(thr?Y1:Y1-BR);
+wpos=[cx,cy];visG.appendChild(crG);crG.textContent="";[["#0b2a63",1.5],["#fff",.7]].forEach(function(q){crG.appendChild(mk("circle",{cx:cx,cy:cy,r:BR-.4,stroke:q[0],"stroke-width":q[1],fill:"none"}));crG.appendChild(mk("line",{x1:cx-BR,y1:cy,x2:cx+BR,y2:cy,stroke:q[0],"stroke-width":q[1],"stroke-linecap":"round"}));crG.appendChild(mk("line",{x1:cx,y1:cy-BR,x2:cx,y2:cy+BR,stroke:q[0],"stroke-width":q[1],"stroke-linecap":"round"}))})}}
 function tOf(v){for(var i=0;i<A.length-1;i++)if(v>=A[i][0]&&v<=A[i+1][0])return A[i][1]+(A[i+1][1]-A[i][1])*(v-A[i][0])/(A[i+1][0]-A[i][0]);return null}
 function tl(x1,y1,x2,y2,dot){trG.appendChild(mk("line",{x1:x1,y1:y1,x2:x2,y2:y2,stroke:"#ff8a00","stroke-width":1.1,"stroke-linecap":"round"}));
 if(dot!==false)trG.appendChild(mk("circle",{cx:x2,cy:y2,r:1.6,fill:"#ff8a00",stroke:"#0b2a63","stroke-width":.4}))}
-function drawTrajet(){trG.textContent="";var R=null,m=lastAraw!==null?tOf(lastAraw):null;
-if(m!==null){R=[fx(X0+S*m),fy(Y0)];tl(ball.x,ball.y,R[0],R[1])}
-if(wpos)tl(ball2.x,ball2.y,wpos[0],wpos[1]);
+function drawTrajet(){trG.textContent="";if(!close)tl(ball2.x,ball2.y,ball3.x,ball3.y,false);var A=ap();var R=null,m=lastAraw!==null?tOf(lastAraw):null;
+if(m!==null){R=[fx(X0+S*m),fy(Y0)];tl(A.x,A.y,R[0],R[1]);if(close)trG.appendChild(mk("circle",{cx:A.x,cy:A.y,r:1.8,fill:"none",stroke:"#ff8a00","stroke-width":.7}))}
+if(wpos)tl(dpo().x,dpo().y,wpos[0],wpos[1]);
 if(R&&wpos){var xs=flipH?X1:X0,rx=2*xs-R[0],den=rx-wpos[0];
 if(Math.abs(den)>1e-6){var t=(xs-wpos[0])/den;
 if(t>0&&t<1){var qy=wpos[1]+t*(R[1]-wpos[1]);tl(wpos[0],wpos[1],xs,qy);tl(xs,qy,R[0],R[1],false)}}}}
-function depVal(b){var x=((dflipH?X0+X1-b.x:b.x)-X0)/S,y=(dflip?b.y-Y0:Y1-b.y)/S,h=x+y;
+function depVal(b,fl,fh){var x=((fh?X0+X1-b.x:b.x)-X0)/S,y=(fl?b.y-Y0:Y1-b.y)/S,h=x+y;
 if(h<=8)return h<2?"< 20":10+5*h;
 var u=h-8;return u>3?"> 90":u<=2?50+10*u:u<=2.5?70+20*(u-2):80+20*(u-2.5)}
-function place2(){var fr={f:!flip,h:flipH};if(fr.f!==dflip||fr.h!==dflipH){dflip=fr.f;dflipH=fr.h;drawDep()}yb.setAttribute("transform","translate("+ball2.x+","+ball2.y+")");
-var dv=nearCorner(ball2)?52:depVal(ball2);lastD=typeof dv==="number"?Math.round(dv):null;document.getElementById("vy").textContent=typeof dv==="number"?Math.round(dv):dv;refreshNote()}
-world.appendChild(bg);world.appendChild(yb);update();place2();
+function place2(){var fr=[!flip,flipH];if(fr[0]!==dflip||fr[1]!==dflipH){dflip=fr[0];dflipH=fr[1];drawDep()}yb.setAttribute("transform","translate("+ball2.x+","+ball2.y+")");
+var Dp=dpo(),dv=nearCorner(Dp)?52:depVal(Dp,dflip,dflipH);lastD=typeof dv==="number"?Math.round(dv):null;document.getElementById("vy").textContent=typeof dv==="number"?Math.round(dv):dv;refreshNote();drawDL()}
+world.appendChild(bg);world.appendChild(yb);world.appendChild(wb);update();place2();
 function bind(id,fn){var b=document.getElementById(id);b.addEventListener("click",function(){var on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on?"true":"false");fn(on)})}
-bind("b2",function(on){var d=on?"block":"none";g3.style.display=d;a.style.display=d});
-bind("b3",function(on){dpG.style.display=on?"block":"none"});
-bind("b4",function(on){visG.style.display=on?"block":"none"});
+bind("b2",function(on){g3.style.display=on?"block":"none"});
+bind("b3",function(on){dlG.style.display=on?"block":"none"});
+bind("b4",function(on){crG.style.display=on?"block":"none"});
 bind("b5",function(on){trG.style.display=on?"block":"none"});
 })();
 </script>

@@ -11,7 +11,7 @@ Elle s'installe sur l'écran d'accueil de l'iPhone et fonctionne ensuite sans co
 | `index.html` | L'application (une seule page) |
 | `manifest.webmanifest` | Nom, icônes et affichage plein écran |
 | `sw.js` | Mode hors ligne |
-| `icons/` | Icônes de l'application |
+| `icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, `apple-touch-icon.png` | Icônes de l'application |
 | `.nojekyll` | Facultatif : dit à GitHub Pages de publier les fichiers tels quels (fichier caché) |
 
 ## Publier sur GitHub Pages
@@ -20,7 +20,7 @@ Elle s'installe sur l'écran d'accueil de l'iPhone et fonctionne ensuite sans co
 
 1. Sur github.com, créez un compte, puis un nouveau dépôt public, par exemple `diamond-system`.
 2. Dans le dépôt, choisissez **uploading an existing file**, puis glissez-y **tout le contenu** de ce dossier
-   (`index.html`, `manifest.webmanifest`, `sw.js` et le dossier `icons` ; le fichier `.nojekyll` est facultatif). Validez avec **Commit changes**.
+   (`index.html`, `manifest.webmanifest`, `sw.js` et les 4 images `.png` ; le fichier `.nojekyll` est facultatif). Validez avec **Commit changes**.
 3. Ouvrez **Settings → Pages**. Dans « Build and deployment », choisissez
    **Deploy from a branch**, la branche **main** et le dossier **/ (root)**, puis **Save**.
 4. Après une minute environ, l'adresse s'affiche en haut de la page :
@@ -37,7 +37,7 @@ Elle s'installe sur l'écran d'accueil de l'iPhone et fonctionne ensuite sans co
 
 Remplacez `index.html` dans le dépôt. La page se met à jour toute seule dès que l'iPhone a internet.
 Si vous modifiez une icône ou le manifeste, changez aussi le numéro de version dans `sw.js`
-(`diamond3c-v1` devient `diamond3c-v2`) pour forcer le rafraîchissement.
+(`diamond3c-v4` devient `diamond3c-v5`) pour forcer le rafraîchissement.
 
 ## Tester sur votre ordinateur
 

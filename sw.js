@@ -1,14 +1,14 @@
 /* Mode hors ligne de Diamond System.
-   Pour publier une nouvelle version, changez le numéro ci-dessous (v1 -> v2). */
-const CACHE = "diamond3c-v1";
+   Pour publier une nouvelle version, changez le numéro ci-dessous (v3 -> v4). */
+const CACHE = "diamond3c-v4";
 const PRECACHE = [
   "./",
   "index.html",
   "manifest.webmanifest",
-  "icons/icon-192.png",
-  "icons/icon-512.png",
-  "icons/icon-maskable-512.png",
-  "icons/apple-touch-icon.png"
+  "icon-192.png",
+  "icon-512.png",
+  "icon-maskable-512.png",
+  "apple-touch-icon.png"
 ];
 
 self.addEventListener("install", (e) => {
