@@ -131,7 +131,7 @@ function nearCorner(b){return[[X0,Y0],[X1,Y0],[X0,Y1],[X1,Y1]].some(function(c){
 var close=false;
 function ap(){return close?{x:(ball.x+ball2.x)/2,y:(ball.y+ball2.y)/2}:ball}
 function dpo(){return close?ball3:ball2}
-function update(){close=Math.hypot(ball.x-ball2.x,ball.y-ball2.y)<=4*BR;var A=ap(),f=true,h=false,r=null;var pick=null,pickA=null,Dq=dpo();[[true,false],[true,true],[false,false],[false,true]].sort(function(a,b){var d=function(c){return Math.hypot(Dq.x-(c[1]?X0:X1),Dq.y-(!c[0]?Y0:Y1))};return d(a)-d(b)}).forEach(function(c){var q=nearCorner(A)?22:val([c[1]?X0+X1-A.x:A.x,c[0]?Y0+Y1-A.y:A.y]);if(typeof q!=="number")return;var dd=nearCorner(Dq)?52:depVal(Dq,!c[0],c[1]);if(!pickA)pickA={c:c,q:q};if(!pick&&typeof dd==="number")pick={c:c,q:q}});var sel=pick||pickA||{c:[true,false],q:val([A.x,Y0+Y1-A.y])};f=sel.c[0];h=sel.c[1];r=sel.q;
+function update(){close=Math.hypot(ball.x-ball2.x,ball.y-ball2.y)<=4*BR;var A=ap(),f=true,h=false,r=null;var sel=null;[[true,false],[true,true],[false,false],[false,true]].some(function(c){var q=nearCorner(A)?22:val([c[1]?X0+X1-A.x:A.x,c[0]?Y0+Y1-A.y:A.y]);if(typeof q==="number"){sel={c:c,q:q};return true}});if(!sel)sel={c:[true,false],q:val([A.x,Y0+Y1-A.y])};f=sel.c[0];h=sel.c[1];r=sel.q;
 if(f!==flip||h!==flipH){flip=f;flipH=h;draw()}
 place2();
 if(nearCorner(A))r=22;
@@ -173,7 +173,7 @@ if(t>0&&t<1){var qy=wpos[1]+t*(R[1]-wpos[1]);tl(wpos[0],wpos[1],xs,qy);tl(xs,qy,
 function depVal(b,fl,fh){var x=((fh?X0+X1-b.x:b.x)-X0)/S,y=(fl?b.y-Y0:Y1-b.y)/S,h=x+y;
 if(h<=8)return h<2?"< 20":10+5*h;
 var u=h-8;return u>3?"> 90":u<=2?50+10*u:u<=2.5?70+20*(u-2):80+20*(u-2.5)}
-function place2(){var fr=[!flip,flipH];if(fr[0]!==dflip||fr[1]!==dflipH){dflip=fr[0];dflipH=fr[1];drawDep()}yb.setAttribute("transform","translate("+ball2.x+","+ball2.y+")");
+function place2(){var Dq=dpo(),fr=null,cs=[[!flip,flipH],[!flip,!flipH],[flip,flipH],[flip,!flipH]];cs.some(function(c){if(nearCorner(Dq)||typeof depVal(Dq,c[0],c[1])==="number"){fr=c;return true}});if(!fr)fr=cs[0];if(fr[0]!==dflip||fr[1]!==dflipH){dflip=fr[0];dflipH=fr[1];drawDep()}yb.setAttribute("transform","translate("+ball2.x+","+ball2.y+")");
 var Dp=dpo(),dv=nearCorner(Dp)?52:depVal(Dp,dflip,dflipH);lastD=typeof dv==="number"?Math.round(dv):null;document.getElementById("vy").textContent=typeof dv==="number"?Math.round(dv):dv;refreshNote();drawDL()}
 world.appendChild(bg);world.appendChild(yb);world.appendChild(wb);update();place2();
 function bind(id,fn){var b=document.getElementById(id);b.addEventListener("click",function(){var on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on?"true":"false");fn(on)})}
