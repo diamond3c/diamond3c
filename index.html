@@ -30,7 +30,14 @@ svg{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:
 .arr line{stroke:var(--red);stroke-width:.6}
 .vl{fill:#fff;stroke:#0b2a63;stroke-width:1.1px;paint-order:stroke;stroke-linejoin:round;font:700 6.6px "Bricolage Grotesque",system-ui,sans-serif}
 .dp{fill:#ffd23f;stroke:#0b2a63;stroke-width:1.1px;paint-order:stroke;stroke-linejoin:round;font:700 6.6px "Bricolage Grotesque",system-ui,sans-serif}
-.btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.ibtn{position:absolute;top:6px;right:6px;z-index:6;width:30px;height:30px;border-radius:50%;border:1px solid #8c8c8c;padding:0;cursor:pointer;background:radial-gradient(circle at 35% 30%,#fff 0%,#f4f4ec 50%,#a9a99b 100%);box-shadow:1px 2px 4px rgba(0,0,0,.35);color:#0b2a63;font:800 17px/1 "Bricolage Grotesque",system-ui,sans-serif;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.ibtn:active{transform:scale(.94)}
+.sheet{text-align:center;position:absolute;z-index:5;display:none;flex-direction:column;overflow:auto;background:rgba(11,42,99,.97);color:#fff;border:2px solid #c58a5a;border-radius:3px;padding:8px 9px 6px;font:500 11.5px/1.3 "Bricolage Grotesque",system-ui,sans-serif;-webkit-overflow-scrolling:touch}
+.sheet h2:first-child{margin-top:auto}.sheet h2{margin:0 0 2px;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:#ffd23f}
+.sheet p,.sheet ul{margin:0 0 6px}.sheet ul{padding:0;margin-left:0;list-style:none}.sheet li{margin:0 0 4px}
+.sheet b{color:#fff}.sheet .cp{margin:2.6em 0 auto;text-align:center;font-size:10.5px;opacity:.8}
+@media (max-height:700px){.sheet{font-size:10.5px;line-height:1.22;padding:6px 8px 4px}.sheet li{margin-bottom:1px}.sheet p,.sheet ul{margin-bottom:3px}.sheet h2{font-size:10px}}
+.btns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .btn{font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-height:68px;padding:6px 3px;border-radius:12px;border:2px solid var(--c);background:var(--tint);color:var(--c);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;line-height:1.15}
 .btn span{font-size:.74rem;font-weight:600;text-align:center}
 .btn b{font-size:1.4rem;line-height:1.1}
@@ -44,39 +51,79 @@ svg{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:
 .btn.o{--c:var(--org);--tint:var(--to);--fill:#ff8a00;--on:#2b1600}
 .btn,.btn.w{background:#000;border-color:var(--k);color:var(--k)}
 .btn[aria-pressed="true"],.btn.w[aria-pressed="true"]{background:var(--k);color:#000;border-color:var(--k)}
+.btn[data-s="2"]{box-shadow:inset 0 0 0 3px #000,inset 0 0 0 5px rgba(0,0,0,.35)}
+.btn[data-s="0"] b,.btn[data-s="0"] small{visibility:hidden}
 .btn.r{--k:#ff4d5e}.btn.y{--k:#f6d12b}.btn.w{--k:#fff}.btn.o{--k:#ff8a00}
 </style>
 </head>
 <body>
 <main>
 <div class="board">
+<button type="button" class="ibtn" id="info" aria-label="Informations" aria-expanded="false">i</button>
+<div class="sheet" id="sheet" role="dialog" aria-label="Informations">
+<h2>But</h2>
+<p>Comprendre, apprendre et appliquer le système des diamants (billard 3 bandes).</p>
+<h2>Mode d’emploi</h2>
+<ul>
+<li>Déplacez la <b>rouge</b> (arrivée), la <b>jaune</b> (départ) et la <b>blanche</b> (tir).</li>
+<li>Chaque bouton : 1 clic, la valeur dans le bouton ; 2 clics, les valeurs sur le billard et les diagonales, la ligne ou le trajet ; 3 clics, masquer. Visée = départ − arrivée.</li>
+<li>Rouge et jaune à moins d’une bille : la blanche devient le départ, l’arrivée est leur milieu.</li>
+</ul>
+<h2>Important</h2>
+<ul>
+<li><b>Attaque de la blanche : toujours au centre, avec le maximum de bon effet latéral.</b></li>
+<li>Départ par la <b>grande bande</b> : visée sur la bande, à côté de la valeur. Départ par la <b>petite bande</b> : visée à travers la bande.</li>
+</ul>
+<h2>Limites</h2>
+<p>Valable seulement si l’attaque va de la <b>grande bande vers la petite bande</b>, et si la <b>valeur de départ est supérieure ou égale à la valeur d’arrivée</b>.</p>
+<p class="cp">Copyright diamond3c</p>
+</div>
 <svg id="table" viewBox="-202 -18 202 348" role="img" aria-label="Billard français vu de dessus, posé dans le sens de la hauteur : tapis bleu, bandes en bois, diamants, billes rouge et jaune">
 <defs>
 <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a4a2b"/><stop offset="1" stop-color="#5a3219"/></linearGradient>
 <radialGradient id="cloth" cx=".5" cy=".5" r=".75"><stop offset="0" stop-color="#2b6fd1"/><stop offset="1" stop-color="#1b52a8"/></radialGradient>
+<linearGradient id="woodHi" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c58a5a" stop-opacity=".55"/><stop offset=".5" stop-color="#c58a5a" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></linearGradient>
+<filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".012 .55" numOctaves="3" seed="7"/><feColorMatrix values="0 0 0 0 .13  0 0 0 0 .06  0 0 0 0 .02  0 0 0 .9 -.1"/></filter>
+<filter id="nap" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 .08  0 0 0 0 .25  0 0 0 .55 -.18"/></filter>
+<filter id="bl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation=".8"/></filter>
+<filter id="bl2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation=".35"/></filter>
+<linearGradient id="cT" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#06204f" stop-opacity=".6"/><stop offset="1" stop-color="#06204f" stop-opacity="0"/></linearGradient>
+<linearGradient id="cB" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#06204f" stop-opacity=".6"/><stop offset="1" stop-color="#06204f" stop-opacity="0"/></linearGradient>
+<linearGradient id="cL" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#06204f" stop-opacity=".6"/><stop offset="1" stop-color="#06204f" stop-opacity="0"/></linearGradient>
+<linearGradient id="cR" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#06204f" stop-opacity=".6"/><stop offset="1" stop-color="#06204f" stop-opacity="0"/></linearGradient>
+<linearGradient id="pearl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#e9e3d2"/><stop offset="1" stop-color="#bdb59f"/></linearGradient>
+<radialGradient id="gRed" cx=".35" cy=".7" fx=".35" fy=".7" r=".85"><stop offset="0" stop-color="#ff7a7e"/><stop offset=".45" stop-color="#e0262d"/><stop offset="1" stop-color="#7d0f14"/></radialGradient>
+<radialGradient id="gYel" cx=".35" cy=".7" fx=".35" fy=".7" r=".85"><stop offset="0" stop-color="#fff3a0"/><stop offset=".45" stop-color="#f6d12b"/><stop offset="1" stop-color="#8a6d00"/></radialGradient>
+<radialGradient id="gWht" cx=".35" cy=".7" fx=".35" fy=".7" r=".85"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#f4f4ec"/><stop offset="1" stop-color="#a9a99b"/></radialGradient>
 </defs>
 <g id="world" transform="rotate(90)">
 <g transform="translate(0,16)">
 <rect x="0" y="0" width="312" height="170" rx="9" fill="url(#wood)"/>
+<clipPath id="wclip"><rect x="0" y="0" width="312" height="170" rx="9"/></clipPath><rect x="0" y="0" width="312" height="170" filter="url(#grain)" opacity=".5" clip-path="url(#wclip)"/>
+<rect x=".6" y=".6" width="310.8" height="168.8" rx="8.5" fill="none" stroke="url(#woodHi)" stroke-width="1.2"/>
+<rect x="11.5" y="11.5" width="289" height="147" fill="#2a160a" opacity=".55"/>
 <rect x="14" y="14" width="284" height="142" fill="url(#cloth)"/>
-<rect x="14" y="14" width="284" height="142" fill="none" stroke="#0f3b82" stroke-width="2"/>
+<rect x="14" y="14" width="284" height="142" filter="url(#nap)" opacity=".5"/>
+<rect x="14" y="14" width="284" height="7" fill="url(#cT)"/><rect x="14" y="149" width="284" height="7" fill="url(#cB)"/>
+<rect x="14" y="14" width="7" height="142" fill="url(#cL)"/><rect x="291" y="14" width="7" height="142" fill="url(#cR)"/>
+<rect x="14" y="14" width="284" height="142" fill="none" stroke="#0b2f6b" stroke-width="1.4"/>
+<rect x="12.3" y="12.3" width="287.4" height="145.4" fill="none" stroke="#c58a5a" stroke-opacity=".5" stroke-width=".5"/>
 <g id="grid" stroke="#ffffff" stroke-opacity=".35" stroke-width=".5" stroke-dasharray="2 2"></g>
-<g id="diamonds" fill="#f4efe2" stroke="#c9c0a8" stroke-width=".3"></g>
+<g id="diamonds" fill="url(#pearl)" stroke="#6e6551" stroke-width=".3"></g>
 </g>
 <g id="grid2" stroke="#ff6b6b" stroke-opacity=".9" stroke-width=".7" style="display:none"></g>
-<g class="arr" id="arr"></g>
-<g id="dep"></g>
-<g id="vis"></g>
+<g class="arr" id="arr" style="display:none"></g>
+<g id="dep" style="display:none"></g>
+<g id="vis" style="display:none"></g>
 <g id="trajet" style="display:none"></g>
 </g>
 </svg>
 </div>
 
 <nav class="btns" aria-label="Affichages">
-<button type="button" class="btn r" id="b2" aria-pressed="false"><span>Arrivée</span><b id="v">–</b></button>
-<button type="button" class="btn y" id="b3" aria-pressed="false"><span>Départ</span><b id="vy">–</b></button>
-<button type="button" class="btn w" id="b4" aria-pressed="false"><span>Visée</span><b id="vw">–</b><small id="nw"></small></button>
-<button type="button" class="btn o" id="b5" aria-pressed="false"><span>Trajet</span></button>
+<button type="button" class="btn r" id="b2" aria-pressed="false" data-s="0"><span>Arrivée</span><b id="v">–</b></button>
+<button type="button" class="btn y" id="b3" aria-pressed="false" data-s="0"><span>Départ</span><b id="vy">–</b></button>
+<button type="button" class="btn w" id="b4" aria-pressed="false" data-s="0"><span>Visée</span><b id="vw">–</b><small id="nw"></small></button>
 </nav>
 </main>
 <script>
@@ -106,7 +153,7 @@ for(var k=0;k<3;k++)for(var i=1;i<ly.length;i++){var gap=ly[i]-ly[i-1];if(gap<10
 sh.forEach(function(o,i){var sg=flipH?-1:1,x0=flipH?0:312;a.appendChild(mk("path",{d:"M"+x0+","+o.y+" L"+(x0+4*sg)+","+o.y+" L"+(x0+7*sg)+","+ly[i]}));
 var tx=x0+11.5*sg,t=mk("text",{x:tx,y:ly[i],transform:"rotate(-90 "+tx+" "+ly[i]+")"});t.textContent=o.v;a.appendChild(t)});
 }
-var dlG=mk("g",{style:"display:none"}),crG=mk("g",{style:"display:none"});
+var dlG=mk("g",{style:"display:none"}),crG=mk("g",{});
 function drawDL(){dlG.textContent="";var dxf=function(x){return dflipH?X0+X1-x:x},dyf=function(y){return dflip?Y0+Y1-y:y};
 var x=((dflipH?X0+X1-dpo().x:dpo().x)-X0)/S,y=(dflip?dpo().y-Y0:Y1-dpo().y)/S,h=x+y;if(h<2||h>11)return;
 var a=h<=8?[h,0]:[8,h-8],b=[x,y];
@@ -122,10 +169,10 @@ function dt(x,y,txt,anc){var t=mk("text",{x:x,y:y,"text-anchor":"middle","domina
 function val(P){var c=L.map(function(o){var dx=o.E[0]-o.T[0],dy=o.E[1]-o.T[1];return(dx*(P[1]-o.T[1])-dy*(P[0]-o.T[0]))/Math.hypot(dx,dy)});
 if(c[0]>0)return"< 0";if(c[c.length-1]<0)return"> 80";
 for(var i=0;i<c.length-1;i++)if(c[i]<=0&&c[i+1]>=0){var p=-c[i],q=c[i+1];return(L[i].v+(L[i+1].v-L[i].v)*(p+q?p/(p+q):0))}}
+function look(g,gr,rim,sp){var sh=mk("ellipse",{cx:1.5,cy:-1,rx:BR*1.05,ry:BR*.95,fill:"#020a1c","fill-opacity":.45,filter:"url(#bl)","pointer-events":"none"});g.appendChild(sh);g.appendChild(mk("circle",{r:BR,fill:"url(#"+gr+")",stroke:rim,"stroke-width":.4,"pointer-events":"none"}));g.appendChild(mk("ellipse",{cx:-1.05,cy:.95,rx:.55,ry:.95,fill:"#fff","fill-opacity":sp,filter:"url(#bl2)","pointer-events":"none",transform:"rotate(-35 -1.05 .95)"}))}
 var bg=mk("g",{style:"cursor:grab"});
 bg.appendChild(mk("circle",{r:10,fill:"transparent"}));
-bg.appendChild(mk("circle",{r:BR,fill:"#e0262d",stroke:"#7d0f14","stroke-width":.6}));
-bg.appendChild(mk("circle",{r:.9,cx:-1,cy:-1,fill:"#fff","fill-opacity":.7}));
+look(bg,"gRed","#5e0a0e",.8);
 var vEl=document.getElementById("v");
 function nearCorner(b){return[[X0,Y0],[X1,Y0],[X0,Y1],[X1,Y1]].some(function(c){return Math.hypot(b.x-c[0],b.y-c[1])<=12})}
 var close=false;
@@ -145,10 +192,9 @@ svg.addEventListener("pointerdown",function(e){var p=pt(e);if(p.x>=X0&&p.x<=X1&&
 svg.addEventListener("pointermove",function(e){if(drag)setBall(e)});
 ["pointerup","pointercancel"].forEach(function(n){svg.addEventListener(n,function(){drag=false})});
 var ball2={x:87.4,y:71.3},yb=mk("g",{style:"cursor:grab"}),ball3={x:190,y:71.3},wb=mk("g",{style:"cursor:grab"});
-wb.appendChild(mk("circle",{r:10,fill:"transparent"}));wb.appendChild(mk("circle",{r:BR,fill:"#f7f7f2",stroke:"#8c8c8c","stroke-width":.6}));wb.appendChild(mk("circle",{r:.9,cx:-1,cy:-1,fill:"#fff"}));wb.setAttribute("transform","translate("+ball3.x+","+ball3.y+")");
+wb.appendChild(mk("circle",{r:10,fill:"transparent"}));look(wb,"gWht","#7a7a6c",.9);wb.setAttribute("transform","translate("+ball3.x+","+ball3.y+")");
 yb.appendChild(mk("circle",{r:10,fill:"transparent"}));
-yb.appendChild(mk("circle",{r:BR,fill:"#f6d12b",stroke:"#8a6d00","stroke-width":.6}));
-yb.appendChild(mk("circle",{r:.9,cx:-1,cy:-1,fill:"#fff","fill-opacity":.8}));
+look(yb,"gYel","#6b5400",.8);
 function refreshNote(){var e=document.getElementById("nw"),w=document.getElementById("vw");
 vtop=!dflip;vh=!!dflipH;
 if(lastA===null||lastD===null){lastV=null;w.textContent="–";e.textContent=""}
@@ -162,14 +208,18 @@ if(lastV!==null&&lastV>=0&&lastV<=90){var m=lastV<=50?lastV/10:5+(lastV-50)/20;
 var cx=vh?X1-S*m:X0+S*m,thr=lastD>=50,cy=vtop?(thr?Y0:Y0+BR):(thr?Y1:Y1-BR);
 wpos=[cx,cy];visG.appendChild(crG);crG.textContent="";[["#0b2a63",1.5],["#fff",.7]].forEach(function(q){crG.appendChild(mk("circle",{cx:cx,cy:cy,r:BR-.4,stroke:q[0],"stroke-width":q[1],fill:"none"}));crG.appendChild(mk("line",{x1:cx-BR,y1:cy,x2:cx+BR,y2:cy,stroke:q[0],"stroke-width":q[1],"stroke-linecap":"round"}));crG.appendChild(mk("line",{x1:cx,y1:cy-BR,x2:cx,y2:cy+BR,stroke:q[0],"stroke-width":q[1],"stroke-linecap":"round"}))})}}
 function tOf(v){for(var i=0;i<A.length-1;i++)if(v>=A[i][0]&&v<=A[i+1][0])return A[i][1]+(A[i+1][1]-A[i][1])*(v-A[i][0])/(A[i+1][0]-A[i][0]);return null}
-function tl(x1,y1,x2,y2,dot){trG.appendChild(mk("line",{x1:x1,y1:y1,x2:x2,y2:y2,stroke:"#ff8a00","stroke-width":1.1,"stroke-linecap":"round"}));
-if(dot!==false)trG.appendChild(mk("circle",{cx:x2,cy:y2,r:1.6,fill:"#ff8a00",stroke:"#0b2a63","stroke-width":.4}))}
-function drawTrajet(){trG.textContent="";if(!close)tl(ball2.x,ball2.y,ball3.x,ball3.y,false);var A=ap();var R=null,m=lastAraw!==null?tOf(lastAraw):null;
-if(m!==null){R=[fx(X0+S*m),fy(Y0)];tl(A.x,A.y,R[0],R[1]);if(close)trG.appendChild(mk("circle",{cx:A.x,cy:A.y,r:1.8,fill:"none",stroke:"#ff8a00","stroke-width":.7}))}
-if(wpos)tl(dpo().x,dpo().y,wpos[0],wpos[1]);
-if(R&&wpos){var xs=flipH?X1:X0,rx=2*xs-R[0],den=rx-wpos[0];
-if(Math.abs(den)>1e-6){var t=(xs-wpos[0])/den;
-if(t>0&&t<1){var qy=wpos[1]+t*(R[1]-wpos[1]);tl(wpos[0],wpos[1],xs,qy);tl(xs,qy,R[0],R[1],false)}}}}
+function tl(x1,y1,x2,y2,dot){trG.appendChild(mk("line",{x1:x1,y1:y1,x2:x2,y2:y2,stroke:"#0b2a63","stroke-opacity":.55,"stroke-width":2.4,"stroke-linecap":"round"}));trG.appendChild(mk("line",{x1:x1,y1:y1,x2:x2,y2:y2,stroke:"#fff","stroke-width":1.1,"stroke-linecap":"round"}));
+if(dot!==false)trG.appendChild(mk("circle",{cx:x2,cy:y2,r:1.6,fill:"#fff",stroke:"#0b2a63","stroke-width":.4}))}
+function drawTrajet(){trG.textContent="";var A=ap(),R=null,Q=null,m=lastAraw!==null?tOf(lastAraw):null;
+if(m!==null)R=[fx(X0+S*m),fy(Y0)];
+var xs=flipH?X1:X0;
+if(R&&wpos){var rx=2*xs-R[0],den=rx-wpos[0];if(Math.abs(den)>1e-6){var t=(xs-wpos[0])/den;if(t>0&&t<1)Q=[xs,wpos[1]+t*(R[1]-wpos[1])]}}
+var ok=!!(R&&wpos&&Q),bs=document.querySelector("#b5 span");if(bs){bs.textContent=ok?"Trajet":"\u2715";bs.style.fontSize=ok?"":"26px";bs.style.lineHeight=ok?"":"1"}
+if(!ok)return;
+var ed=function(a,b){var dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy)||1;return[a[0]+BR*dx/L,a[1]+BR*dy/L]};
+if(!close){var e1=ed([ball2.x,ball2.y],[ball3.x,ball3.y]);tl(e1[0],e1[1],ball3.x,ball3.y,false)}
+tl(A.x,A.y,R[0],R[1]);if(close)trG.appendChild(mk("circle",{cx:A.x,cy:A.y,r:1.8,fill:"none",stroke:"#fff","stroke-width":.7}));
+var e2=ed([dpo().x,dpo().y],wpos);tl(e2[0],e2[1],wpos[0],wpos[1]);tl(wpos[0],wpos[1],Q[0],Q[1]);tl(Q[0],Q[1],R[0],R[1],false)}
 function depVal(b,fl,fh){var x=((fh?X0+X1-b.x:b.x)-X0)/S,y=(fl?b.y-Y0:Y1-b.y)/S,h=x+y;
 if(h<=8)return h<2?"< 20":10+5*h;
 var u=h-8;return u>3?"> 90":u<=2?50+10*u:u<=2.5?70+20*(u-2):80+20*(u-2.5)}
@@ -177,10 +227,16 @@ function place2(){var Dq=dpo(),fr=null,cs=[[!flip,flipH],[!flip,!flipH],[flip,fl
 var Dp=dpo(),dv=nearCorner(Dp)?52:depVal(Dp,dflip,dflipH);lastD=typeof dv==="number"?Math.round(dv):null;document.getElementById("vy").textContent=typeof dv==="number"?Math.round(dv):dv;refreshNote();drawDL()}
 world.appendChild(bg);world.appendChild(yb);world.appendChild(wb);update();place2();
 function bind(id,fn){var b=document.getElementById(id);b.addEventListener("click",function(){var on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on?"true":"false");fn(on)})}
-bind("b2",function(on){g3.style.display=on?"block":"none"});
-bind("b3",function(on){dlG.style.display=on?"block":"none"});
-bind("b4",function(on){crG.style.display=on?"block":"none"});
-bind("b5",function(on){trG.style.display=on?"block":"none"});
+function cyc(id,fn){var b=document.getElementById(id);b.addEventListener("click",function(){var n=((+b.getAttribute("data-s"))+1)%3;b.setAttribute("data-s",n);b.setAttribute("aria-pressed",n>0?"true":"false");fn(n)})}
+(function(){var bd=document.querySelector(".board"),btn=document.getElementById("info"),sh=document.getElementById("sheet"),cl=document.querySelector('rect[fill="url(#cloth)"]');
+function place(){var b=bd.getBoundingClientRect(),c=cl.getBoundingClientRect();sh.style.left=(c.left-b.left)+"px";sh.style.top=(c.top-b.top)+"px";sh.style.width=c.width+"px";sh.style.height=c.height+"px"}
+function tog(on){if(on===undefined)on=sh.style.display!=="flex";if(on)place();sh.style.display=on?"flex":"none";btn.setAttribute("aria-expanded",on?"true":"false")}
+btn.addEventListener("click",function(){tog()});sh.addEventListener("click",function(){tog(false)});
+window.addEventListener("resize",function(){if(sh.style.display==="flex")place()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape")tog(false)})})();
+cyc("b2",function(n){var d=n>=2?"block":"none";a.style.display=d;g3.style.display=d});
+cyc("b3",function(n){var d=n>=2?"block":"none";dpG.style.display=d;dlG.style.display=d});
+cyc("b4",function(n){var d=n>=2?"block":"none";visG.style.display=d;trG.style.display=d});
 })();
 </script>
 <script>

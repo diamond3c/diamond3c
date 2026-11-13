@@ -37,7 +37,7 @@ Elle s'installe sur l'écran d'accueil de l'iPhone et fonctionne ensuite sans co
 
 Remplacez `index.html` dans le dépôt. La page se met à jour toute seule dès que l'iPhone a internet.
 Si vous modifiez une icône ou le manifeste, changez aussi le numéro de version dans `sw.js`
-(`diamond3c-v5` devient `diamond3c-v6`) pour forcer le rafraîchissement.
+(`diamond3c-v7` devient `diamond3c-v8`) pour forcer le rafraîchissement.
 
 ## Tester sur votre ordinateur
 

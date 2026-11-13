@@ -1,6 +1,6 @@
 /* Mode hors ligne de Diamond System.
    Pour publier une nouvelle version, changez le numéro ci-dessous (v3 -> v4). */
-const CACHE = "diamond3c-v5";
+const CACHE = "diamond3c-v7";
 const PRECACHE = [
   "./",
   "index.html",
